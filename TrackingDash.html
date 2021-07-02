@@ -1,0 +1,342 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <!-- Calender made based on yusufshakeel’s dyCalendarJS library. -->
+    <!-- Charts made using google charts-->
+    <head>
+        <title>Dashboard</title>
+		<meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <link rel="stylesheet" href="assets/css/line-awesome.min.css">
+        <link rel="stylesheet" href="assets/css/cal.css" />
+    </head>
+    <body>
+            <input type="checkbox" id="sidebar-toggle">
+            <div class="sidebar">
+                <div class="sidebar-brand" >
+                    <h3 class="brand">
+                        <span class="lab la-joget"></span>
+                        <span>Dashboard</span>
+                    </h3>
+                    <label for="sidebar-toggle" class="las la-list-alt"></label>
+
+                </div>
+
+                <div class= "sidebar-menu">
+                    <ul>
+                        <li>
+                            <a href="">
+                                <span class="las la-home"></span>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-cog"></span>
+                                <span>Accounts</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-warehouse"></span>
+                                <span>Assembly</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-user-circle"></span>
+                                <span>Customers</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-shipping-fast"></span>
+                                <span>Orders</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-tags"></span>
+                                <span>Tracking Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="">
+                                <span class="las la-cog"></span>
+                                <span>About</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- main-->
+            <div class="main-content">
+                <!-- main body header -->
+                <header>
+                    <div clsass="search-wrapper">
+                        <span class="las la-search"></span>
+                        <input type="search" placeholder="Search">
+                    </div>
+
+                    <div class="social-icons">
+                        <span class="las la-bell"></span>
+                        <span class="las la-comment"></span>
+                        <div></div>
+                    </div>
+                </header>
+                <!-- main body -->
+                <main>
+                    <h2 class="dash-header">Dashboard Overview</h2>
+                    <!-- dashboard cards-->
+                    <div class="dash-card">
+                        <div class="card-border">
+                            <div class="card-body">
+                                <span class="las la-landmark"></span>
+                                <div>
+                                    <h4>Account Balances</h4>
+                                    <h5>$400,000</h5>
+                                </div>
+                            </div>
+                                <div class="card-footer">
+                                    <a href="">View all</a>
+                                </div>
+                        </div>
+                        <div class="card-border">
+                            <div class="card-body">
+                                <span class="las la-robot"></span>
+                                <div>
+                                    <h4>Active Machines</h4>
+                                    <h5>123</h5>
+                                </div>
+                            </div>
+                                <div class="card-footer">
+                                    <a href="">View all</a>
+                                </div>
+                        </div>
+                        <div class="card-border">
+                            <div class="card-body">
+                                <span class="las la-money-check-alt"></span>
+                                <div>
+                                    <h4>Week's Sales Revenue</h4>
+                                    <h5>$126.2K</h5>
+                                </div>
+                            </div>
+                                <div class="card-footer">
+                                    <a href="">View all</a>
+                                </div>
+                        </div>
+
+                    </div>
+                    <!-- Information Cards-->
+                    <div class="buisdata">
+                        <div class="activity-grid">
+                            <div class="graph-card">
+                                <span class="graph-pie">
+                                    <div class="pie-card">
+                                        <h3>Customer Sales</h3>
+                                        <div id="piechart1" style="width: 220px; height: 220px; overflow-x: auto; overflow: hidden;"></div>
+                                    </div>
+                                    <div class="pie-card">
+                                        <h3>Vendor Purchases</h3>
+                                        <div id="piechart2" style="width: 220px; height: 220px; overflow-x: auto; overflow: hidden;"></div>
+                                    </div>
+                                    <div class="pie-card">
+                                        <h3>Work flow</h3>
+                                        <div id="donutchart" style="width: 220px; height: 220px; overflow-x: auto; overflow: hidden;"></div>
+                                    </div>
+                                </span>
+                                
+                                <div class="graph-card-responsive">
+                                    <h3>Quarterly Chart</h3>
+                                    <div id="line-graph" style="width: 800px; height: 400px; overflow-x: auto; overflow: hidden;"></div>
+                                </div>
+                            </div>
+                            <div class="dailyInfo">
+                                <div class="daily">
+                                    <div class="dailyInfo-card">
+                                        <span class="las la-male"></span>
+                                        <div> 
+                                            <h5>345</h5>
+                                            <small>Number of Staff</small>
+                                        </div>
+                                    </div>
+                                    <div class="dailyInfo-card">
+                                        <span class="las la-inbox"></span>
+                                        <div> 
+                                            <h5>Inbox</h5>
+                                        </div>
+                                    </div>
+                                    <div class="dailyInfo-card">
+                                        <span class="las la-info"></span>
+                                        <div> 
+                                            <h5>Help Desk</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Calendar -->
+                               <section>
+                                <div class="box">
+                                    <div class="container">
+                                        <div id="calendar"> </div>
+                                    </div>
+                              </div>
+                               </section>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <footer id="footer">
+                    <div style="margin-top: 1rem;">
+                        <ul class="icons alt">
+                            <li><a href="index.html" class="icon brands alt las la-home" ><span class="label">Home</span></a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Webpage Code</h3>
+                        <ul class="icons alt">
+                            <li><a href="https://github.com/demiaderiye/demiaderiye/blob/main/TrackingDash.html" class="icon brands alt lab la-github"><span class="label">GitHub</span></a></li>
+                        </ul>
+                    </div>                      
+                        <div>
+                            <h3>Email</h3>
+                            <p><a href="mailto: DemiAderiye@gmail.com">DemiAderiye@gmail.com</a></p>
+                        </div>
+                </footer>
+
+            </div>
+
+            
+
+            <!-- Link and calendar options -->
+            <script src="assets/js/calendar.js"></script>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script>
+                dycalendar.draw({
+                target:'#calendar',
+                type:'month',
+                dayformat:'full',
+                monthformat:'full',
+                highlighttargetdate:true,
+                prevnextbutton:'show'
+                })
+            </script>
+
+            <!-- Build calendar function -->
+            <script>
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+              
+                ga('create', 'UA-46156385-1', 'cssscript.com');
+                ga('send', 'pageview');
+              
+              </script>
+
+              <!-- Graph and charts functions -->
+              <script type="text/javascript">
+              google.charts.load('current', {'packages':['corechart']});
+              google.charts.load('current', {'packages':['line']});
+              google.charts.setOnLoadCallback(drawChartOne);
+              google.charts.setOnLoadCallback(drawChartTwo);
+              google.charts.setOnLoadCallback(drawChartThree);
+              google.charts.setOnLoadCallback(drawLineChart);
+        
+              function drawChartOne() {
+        
+                        var data = google.visualization.arrayToDataTable([
+                        ['Customer', 'Sales'],
+                        ['Customer 1', 6],
+                        ['Customer 2', 4],
+                        ['Customer 3', 2],
+                        ['Customer 4', 3],
+                        ['Customer 5', 7]
+                        ]);
+                
+                        var options = {
+                        legend: 'none',
+                        chartArea: {left:10,top:10,width:'90%',height:'90%'} 
+                        };
+                
+                        var chart = new google.visualization.PieChart(document.getElementById('piechart1'));
+                
+                        chart.draw(data, options);
+              }
+
+              function drawChartTwo() {
+            
+                    var data = google.visualization.arrayToDataTable([
+                    ['Vendor', 'Purchases'],
+                    ['Vendor 1',11],
+                    ['Vendor 2', 2],
+                    ['Vendor 3', 2],
+                    ['Vendor 4', 2],
+                    ['Vendor 5', 7]
+                    ]);
+            
+                    var options = {
+                    legend: 'none',
+                    chartArea: {left:10,top:10,width:'90%',height:'90%'} 
+                    };
+            
+                    var chart = new google.visualization.PieChart(document.getElementById('piechart2'));
+            
+                    chart.draw(data, options);
+           }
+
+            function drawChartThree() {
+            
+                    var data = google.visualization.arrayToDataTable([
+                    ['Tasks', 'Time'],
+                    ['Task 1', 1],
+                    ['Task 2', 3],
+                    ['Task 3', 12],
+                    ['Task 4', 2],
+                    ['Task 5', 6]
+                    ]);
+            
+                    var options = {
+                    legend: 'none',
+                    pieHole: 0.4,
+                    chartArea: {left:10,top:10,width:'90%',height:'90%'} 
+                    };
+            
+                    var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            
+                    chart.draw(data, options);
+            }
+
+            function drawLineChart() {
+                  
+                  var data = new google.visualization.DataTable();
+                  data.addColumn('string', 'Quarter');
+                  data.addColumn('number', 'Invoiced');
+                  data.addColumn('number', 'Shipped');
+            
+                  data.addRows([
+                    ['Q1',  200000, 600000],
+                    ['Q2',  150000, 700000],
+                    ['Q3',  350000, 300000],
+                    ['Q4',  100000, 450000],
+                  ]);
+            
+                  var options = {
+                    chart: {
+                      title: '',
+                      subtitle: 'in dollars (USD)'
+                    },
+                    axes: {
+                      x: {
+                        0: {side: 'bottom'}
+                      }
+                    }
+                  };
+                  var chart = new google.charts.Line(document.getElementById('line-graph'));
+            
+                  chart.draw(data, google.charts.Line.convertOptions(options));
+                }
+              </script>
+
+    </body>
+</html>
