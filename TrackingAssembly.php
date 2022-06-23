@@ -29,77 +29,61 @@ function  execute() {
 			switch (true) {
 
 			case (empty($data['Barcode'])):
-				InsertData($barcode);              
+				$action = InsertData($barcode);              //Inserts initial barcode
 				$action = "employee"; 
 				break;
 
 			case (empty($data['Employee'])):
-			case (empty($employee)):
+				$barcode = $data['Barcode'];
 				$action = "employee"; 
 				break;
 			
-			case (!empty($data['EndDate'])):
-				 $action = "Ended";                 
-                 $msg = "Assembly already Ended.";    
+			case (empty($data['StartDate'])):
+				 $action = "Start";                   
 				 break;
-				
-			default:
-				$barcode = $data['Barcode'];
-				$employee = $data['Employee'];
-				$action = "Start";
 				
 			}
 		}
+	
+		switch ($action) {
+
+			case "Start":
+				UpdateEmployee($barcode, $employee);    //Updates Employee
+				StartTime($barcode);                	//Saves the start time 
+				$msg = "Assembly Started.";
+				break;
+
+			case "End":
+				EndTime($barcode);			//Saves the End time 
+				$msg = "Assembly Ended."; 	
+				break;
+		}    
+	    }
 	}else{
-			$errormsg = "Could not connect to database!";
-			return $errormsg;
-	} 
-
-	switch ($action) {
-
-		case "Start":
-			UpdateEmployee($barcode, $employee); 
-			StartTime($barcode);                	//Saves the start time 
-			$msg = "Assembly Started.";
-			break;
-
-		case "End":
-			EndTime($barcode);
-			$msg = "Assembly Ended."; 	
-			break;
+		$errormsg = "Could not connect to database!";
+		return $errormsg;
 	}
-		
+
 	// returns info & buttons or error message 
-    if($errormsg != ''){
-        return $errormsg;
-    }else{ 
-        $button = GetButtons($action);
-        $output = GetData($barcode);
-        return $output;
-    }
+	if($errormsg != ''){
+			return $errormsg;
+		    }else{ 
+			$button = GetButtons($action);
+			$output = GetData($barcode);
+			return $output;
 }
 //Get buttons for page. Can add pause button or more processes 
 function GetButtons ($action){
     global $button, $action, $url, $urlAddEmp, $urlBlank; 
-    if ($action == 'Start'){
-        $button = '<a href= "'.$urlAddEmp.'&action=employee"  style="display: block; margin-left: auto; margin-right: auto; width: 60%;"><img src="images/button_change-employee.png" alt="Change Employee Button"></a>'
-                  .'<br><a href= "'.$url.'&action=End" style=" display: block; margin-left: auto; margin-right: auto; width: 50%;"><img src="images/button_end-assembly.png" alt="End Assembly"></a>';
-    }elseif ($action == 'End'){
-        $button = '<a href= "'.$urlBlank.'" style="display: block; margin-left: auto; margin-right: auto; width: 70%;"><img src="images/button_start-new-assembly.png" alt="Change Employee Button"></a>&nbsp';   
-    }else{
-        $button = '';
-    }
-    return $button;
-}
-//Get buttons for page. Can add pause button or more processes 
-function GetButtons ($action){
-    global $button, $action, $url, $urlAddEmp, $urlBlank; 
-    if ($action == 'Start'){
-        $button = '<a href= "'.$urlAddEmp.'&action=employee"  style="display: block; margin-left: auto; margin-right: auto; width: 60%;"><img src="images/button_change-employee.png" alt="Change Employee Button"></a>'
-                  .'<br><a href= "'.$url.'&action=End" style=" display: block; margin-left: auto; margin-right: auto; width: 50%;"><img src="images/button_end-assembly.png" alt="End Assembly"></a>';
-    }elseif ($action == 'End'){
-        $button = '<a href= "'.$urlBlank.'" style="display: block; margin-left: auto; margin-right: auto; width: 70%;"><img src="images/button_start-new-assembly.png" alt="Change Employee Button"></a>&nbsp';   
-    }else{
+    switch ($action) {
+	case "Start":
+        	$button = '<a href= "'.$urlAddEmp.'&action=AddEmployee"><img src="images/button_change-employee.png" alt="Change Employee Button"></a>'
+                .'<br><a href= "'.$url.'&action=End"><img src="images/button_end-assembly.png" alt="End Assembly"></a>';
+		    break;
+	case 'End':
+        	$button = '<a href= "'.$urlBlank.'"><img src="images/button_start-new-assembly.png" alt="Start new assembly"></a>&nbsp';  
+		    break;
+	    default:
         $button = '';
     }
     return $button;
@@ -109,8 +93,6 @@ function InsertBarcode($barcode){
     $conn = $GLOBALS["conn"];
     $sql = "Insert into assembly (Barcode) Values ('".addslashes($barcode)."')";
     $query = mysqli_query($conn, $sql);
-    $result = "employee";
-	return $result;
 
 }
 //Updates employee in Database
@@ -137,7 +119,7 @@ function EndTIme($bar){
 // Retrives assembly data from database
 function GetData($bar){
     $conn = $GLOBALS["conn"];
-    $where = " Where Barcode = '".$bar."'"; 
+    $where = " Where Barcode = '".addslashes($bar)."'"; 
     $sql = "Select * from assembly".$where;
     $result = mysqli_query($conn, $sql);
     if(empty($result)){
@@ -178,22 +160,22 @@ function CheckServerConnection($conn){
         <!-- shows error message if one is flagged-->
         <?php if ($errormsg != '') { ?>   
             <div style="color:red; text-align: center; font-size:20px;"><?php echo $errormsg; ?></div>
-        <?php } ?>
-
-                <?php if ($action == '') { ?> <!-- If statment to decide page displayed -->
-                
+        <?php }else{ ?>
+		 <!-- Switch statment to decide page displayed -->
+                <?php switch($action) { 
+			Case(''):  ?>
                     <h2>Please scan or enter Barcode</h2>
                      <!-- Get barcode form -->
                         <form method="get">
                             <div class="field">
-                                <div style="margin: auto; width: 50%; padding: 10px;"><img src="images/barcode.png" alt="" />
+                                <div style="margin: auto; width: 50%; padding: 10px;"><img src="images/barcode.png" alt="Enter Barcode" />
                                 <div style="padding: 10px 15%;"><label for="barcode">Barcode:</label>
                                 <input type="number" id="barcode" name="barcode" value=""><br><div>
                                 <div style="padding: 10px 20%;"><input  type="submit" value="Submit"></div>
                             </div>
                         </form>	
             
-                <?php }elseif ($action == 'employee') { ?>
+                <?php Case('employee'): ?>
                     <h2>Please scan or enter Employee Name</h2>
                    
                     <!-- Get employee form -->
@@ -206,7 +188,7 @@ function CheckServerConnection($conn){
                                 <input type="submit" value="Submit">
                         </form>		
 
-                <?php }else{ ?>
+                <?php default: ?>
 
                 <!-- Information Table-->
                 <table>
@@ -230,6 +212,7 @@ function CheckServerConnection($conn){
                     </tr>
                 </table>
                 <?php } echo $button; ?>
+	<?php } else{ ?>
     </div>  
            
     <!-- Scripts -->
