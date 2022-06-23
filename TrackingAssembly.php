@@ -17,60 +17,59 @@ $urlAddEmp = "TrackingAssembly.php?barcode=$barcode&employee=";
 $urlBlank = "TrackingAssembly.php";
 
 execute();
-   
 
-function  execute () {
-global $conn, $errormsg, $barcode, $employee ,$action, $output, $msg, $button;
+function  execute() {
+	global $conn, $errormsg, $barcode, $employee ,$action, $output, $msg, $button;
 
-$errormsg = '';
+	$errormsg = '';
+	if (CheckServerConnection($conn)){
+		if($barcode != ''){
+			$data = GetData($barcode);					
+		
+			switch (true) {
 
-    if (CheckServerConnection($conn)){
-            if($barcode != ''){                                                             //Checks if user entered barcode
-                $data = GetData($barcode);                                                  // Gets exsisting data on barcode from database 
-                if(empty($data['Barcode'])){                                                // Checks if barcode is in data base 
-                    InsertData($barcode);                                                   // If not enters barcode and start time 
-                    $action = "employee";                                                   // Sends user to next page   
-                }else{                                                                      // Barcode exsits in database
-                    if($employee != ''){                                                    // Checks if user has entered an employee
-                        if(empty($data['Employee'])){                                       // Checks if employee has been entered to database
-                            UpdateEmployee($barcode, $employee);                            // Enters employee name into database      
-                            $action = "Start";                                              // Point to next page 
-                            $msg = "Assembly Started.";                                     // Display message
-                        }else{                                                              
-                            if ($action == "End"){                                          // Checks action
-                                UpdateData($barcode);                                       // Enters end date/time
-                                $msg = "Assembly Ended.";                                   // Display message
-                            }else{ 
-                                if (empty($data['EndDate'])){                               // Checks if assembly has ended 
-                                    if($employee != $data['Employee']){                     // Check if entered employee  
-                                        UpdateEmployee($barcode, $employee);                // Enters employee name into database  
-                                        $msg = "Employee Changed. Assembly in progress.";   // Display message
-                                        $action = "Start";                                  // Sends user to next page  
-                                    }else{
-                                        $msg = "Assembly in progress.";                     // Display message
-                                        $action = "Start";                                  // Sends user to next page 
-                                    }
-                                }else{                 
-                                    $action = "End";                                        // Sends user to next page 
-                                    $msg = "Assembly already Ended.";                       // Display message
-                                }
-                            } 
-                        } 
-                    }else{  
-                        $action = "employee";                                               // Keeps user on employee page
-                        return; 
-                    }
-                }
-            }else{
-                return;
-            }
-    }else{
-        $errormsg = "Could not connect to database!";
-        return $errormsg;
-    }  
+			case (empty($data['Barcode'])):
+				InsertData($barcode);              
+				$action = "employee"; 
+				break;
 
+			case (empty($data['Employee'])):
+			case (empty($employee)):
+				$action = "employee"; 
+				break;
+			
+			case (!empty($data['EndDate'])):
+				 $action = "Ended";                 
+                 $msg = "Assembly already Ended.";    
+				 break;
+				
+			default:
+				$barcode = $data['Barcode'];
+				$employee = $data['Employee'];
+				$action = "Start";
+				
+			}
+		}
+	}else{
+			$errormsg = "Could not connect to database!";
+			return $errormsg;
+	} 
 
-    // returns info & buttons or error message 
+	switch ($action) {
+
+		case "Start":
+			UpdateEmployee($barcode, $employee); 
+			StartTime($barcode);                	//Saves the start time 
+			$msg = "Assembly Started.";
+			break;
+
+		case "End":
+			EndTime($barcode);
+			$msg = "Assembly Ended."; 	
+			break;
+	}
+		
+	// returns info & buttons or error message 
     if($errormsg != ''){
         return $errormsg;
     }else{ 
@@ -78,9 +77,20 @@ $errormsg = '';
         $output = GetData($barcode);
         return $output;
     }
-
 }
-
+//Get buttons for page. Can add pause button or more processes 
+function GetButtons ($action){
+    global $button, $action, $url, $urlAddEmp, $urlBlank; 
+    if ($action == 'Start'){
+        $button = '<a href= "'.$urlAddEmp.'&action=employee"  style="display: block; margin-left: auto; margin-right: auto; width: 60%;"><img src="images/button_change-employee.png" alt="Change Employee Button"></a>'
+                  .'<br><a href= "'.$url.'&action=End" style=" display: block; margin-left: auto; margin-right: auto; width: 50%;"><img src="images/button_end-assembly.png" alt="End Assembly"></a>';
+    }elseif ($action == 'End'){
+        $button = '<a href= "'.$urlBlank.'" style="display: block; margin-left: auto; margin-right: auto; width: 70%;"><img src="images/button_start-new-assembly.png" alt="Change Employee Button"></a>&nbsp';   
+    }else{
+        $button = '';
+    }
+    return $button;
+}
 //Get buttons for page. Can add pause button or more processes 
 function GetButtons ($action){
     global $button, $action, $url, $urlAddEmp, $urlBlank; 
@@ -95,22 +105,30 @@ function GetButtons ($action){
     return $button;
 }
 //Inserts new row with barcode and start date/time into database
-function InsertData($barcode){
+function InsertBarcode($barcode){
     $conn = $GLOBALS["conn"];
-    $sql = "Insert into assembly (Barcode, StartDate) Values ('$barcode', NOW())";
-    $result = mysqli_query($conn, $sql);
-    return $result;
+    $sql = "Insert into assembly (Barcode) Values ('".addslashes($barcode)."')";
+    $query = mysqli_query($conn, $sql);
+    $result = "employee";
+	return $result;
 
 }
 //Updates employee in Database
 function UpdateEmployee($bar, $emp){
     $conn = $GLOBALS["conn"];
-    $sql = "Update assembly SET Employee = '$emp' Where Barcode = '$bar'";
+    $sql = "Update assembly SET Employee = '".addslashes($emp)."' Where Barcode = '$bar'";
     $result = mysqli_query($conn, $sql );
 
 }
+//Inserts start date/time 
+function StartTime($bar){
+    $conn = $GLOBALS["conn"];
+    $sql = "Update assembly SET StartDate = NOW() Where Barcode = '$bar'";
+    $result = mysqli_query($conn, $sql );
+	
+}
 //Inserts end date/time 
-function UpdateData($bar){
+function EndTIme($bar){
     $conn = $GLOBALS["conn"];
     $sql = "Update assembly SET EndDate = NOW() Where Barcode = '$bar'";
     $result = mysqli_query($conn, $sql );
@@ -121,7 +139,7 @@ function GetData($bar){
     $conn = $GLOBALS["conn"];
     $where = " Where Barcode = '$bar'"; 
     $sql = "Select * from assembly".$where;
-    $result = mysqli_query($conn, $sql );
+    $result = mysqli_query($conn, $sql);
     if(empty($result)){
         $row = $sql;
     }else{
@@ -130,8 +148,7 @@ function GetData($bar){
     return $row;
 }
 // Checks server connection 
-function CheckServerConnection($conn){
-    
+function CheckServerConnection($conn){   
     if (mysqli_ping($conn)){
         return true;
     }else{
