@@ -116,28 +116,28 @@ function InsertBarcode($barcode){
 //Updates employee in Database
 function UpdateEmployee($bar, $emp){
     $conn = $GLOBALS["conn"];
-    $sql = "Update assembly SET Employee = '".addslashes($emp)."' Where Barcode = '$bar'";
+    $sql = "Update assembly SET Employee = '".addslashes($emp)."' Where Barcode = '".$bar."'";
     $result = mysqli_query($conn, $sql );
 
 }
 //Inserts start date/time 
 function StartTime($bar){
     $conn = $GLOBALS["conn"];
-    $sql = "Update assembly SET StartDate = NOW() Where Barcode = '$bar'";
+    $sql = "Update assembly SET StartDate = NOW() Where Barcode = '".$bar."'";
     $result = mysqli_query($conn, $sql );
 	
 }
 //Inserts end date/time 
 function EndTIme($bar){
     $conn = $GLOBALS["conn"];
-    $sql = "Update assembly SET EndDate = NOW() Where Barcode = '$bar'";
+    $sql = "Update assembly SET EndDate = NOW() Where Barcode = '".$bar."'";
     $result = mysqli_query($conn, $sql );
 
 }
 // Retrives assembly data from database
 function GetData($bar){
     $conn = $GLOBALS["conn"];
-    $where = " Where Barcode = '$bar'"; 
+    $where = " Where Barcode = '".$bar."'"; 
     $sql = "Select * from assembly".$where;
     $result = mysqli_query($conn, $sql);
     if(empty($result)){
